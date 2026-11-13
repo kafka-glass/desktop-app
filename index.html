@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en" class="nojs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KafkaGlass Explorer — Native Apache Kafka Client for macOS</title>
+<meta name="description" content="Browse topics, inspect Avro, JSON and XML messages, produce records and watch live cluster statistics in a fast native macOS app for Apache Kafka.">
+<meta name="author" content="Dmytro Kuchura">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="https://kafka-glass.github.io/desktop-app/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="sitemap.xml">
+<meta name="application-name" content="KafkaGlass Explorer">
+<meta name="apple-mobile-web-app-title" content="KafkaGlass">
+<meta name="theme-color" content="#0a0d14">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KafkaGlass Explorer">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://kafka-glass.github.io/desktop-app/">
+<meta property="og:title" content="KafkaGlass Explorer — Apache Kafka, crystal clear on your Mac">
+<meta property="og:description" content="A fast native macOS client for Apache Kafka: topics, consumer groups, Schema Registry, Avro decoding, message producing and live statistics.">
+<meta property="og:image" content="https://kafka-glass.github.io/desktop-app/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="KafkaGlass Explorer window showing a topic's messages and a decoded Avro record">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KafkaGlass Explorer — Apache Kafka, crystal clear on your Mac">
+<meta name="twitter:description" content="Browse topics, decode Avro, produce messages and watch live Kafka statistics in a native macOS app.">
+<meta name="twitter:image" content="https://kafka-glass.github.io/desktop-app/og.png">
+<meta name="twitter:image:alt" content="KafkaGlass Explorer window showing a topic's messages and a decoded Avro record">
+
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preload" href="icon.png" as="image">
+<link rel="stylesheet" href="style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://kafka-glass.github.io/desktop-app/#author",
+      "name": "Dmytro Kuchura",
+      "url": "https://github.com/dmytro-kuchura"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://kafka-glass.github.io/desktop-app/#app",
+      "name": "KafkaGlass Explorer",
+      "description": "Native macOS desktop client for inspecting, monitoring and debugging Apache Kafka clusters.",
+      "url": "https://kafka-glass.github.io/desktop-app/",
+      "image": "https://kafka-glass.github.io/desktop-app/icon.png",
+      "screenshot": "https://kafka-glass.github.io/desktop-app/og.png",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Apache Kafka Client",
+      "operatingSystem": "macOS 27.0 or later (Apple Silicon)",
+      "softwareVersion": "1.1.0",
+      "inLanguage": "en",
+      "author": { "@id": "https://kafka-glass.github.io/desktop-app/#author" },
+      "publisher": { "@id": "https://kafka-glass.github.io/desktop-app/#author" },
+      "featureList": [
+        "Multiple cluster profiles with PLAINTEXT, SSL/mTLS, SASL PLAIN, SCRAM-SHA-256/512 and GSSAPI/Kerberos",
+        "Fetch messages from newest, earliest, a specific offset or a timestamp without committing offsets",
+        "Auto-detecting deserializer for Confluent Avro, JSON, XML, text and hex",
+        "Confluent Schema Registry browser with schema version diff",
+        "Produce and resend messages with key, value, headers and partition choice",
+        "Live statistics for throughput, consumer group lag and broker latency",
+        "Credentials stored in the macOS Keychain"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://kafka-glass.github.io/desktop-app/#website",
+      "name": "KafkaGlass Explorer",
+      "url": "https://kafka-glass.github.io/desktop-app/",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://kafka-glass.github.io/desktop-app/#author" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://kafka-glass.github.io/desktop-app/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does browsing a topic commit consumer offsets?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. KafkaGlass Explorer reads messages with manual partition assignment and no consumer group subscription, so fetching never commits offsets or joins your application's consumer groups." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to install librdkafka or Homebrew?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. librdkafka, OpenSSL, lz4 and zstd are bundled inside the app." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which security protocols are supported?",
+          "acceptedAnswer": { "@type": "Answer", "text": "PLAINTEXT, SSL with mutual TLS client certificates, SASL_PLAINTEXT and SASL_SSL with PLAIN, SCRAM-SHA-256, SCRAM-SHA-512 and GSSAPI/Kerberos." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where are my passwords stored?",
+          "acceptedAnswer": { "@type": "Answer", "text": "SASL passwords, private key passphrases and Schema Registry secrets are stored in the macOS Keychain. Cluster profiles are stored locally on your Mac." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it decode Avro messages?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Messages in the Confluent wire format are decoded with schemas fetched from your Schema Registry. JSON, XML, plain text and hex views are also available." }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the system requirements?",
+          "acceptedAnswer": { "@type": "Answer", "text": "macOS 27.0 or later on a Mac with Apple Silicon." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script>document.documentElement.className = "js";</script>
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="KafkaGlass Explorer home"><img src="icon.png" alt="" width="32" height="32">KafkaGlass <span>Explorer</span></a>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#tour">Tour</a>
+      <a href="#security">Security</a>
+      <a href="#faq">FAQ</a>
+      <a href="support.html">Support</a>
+    </div>
+    <a class="btn small" href="#download">Download</a>
+  </div>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="wrap">
+    <img class="hero-icon" src="icon.png" alt="" width="112" height="112">
+    <a class="pill" href="#features"><b>macOS</b> Native SwiftUI · Liquid Glass · Version 1.1</a>
+    <h1>Apache Kafka,<br><span class="grad">crystal clear on your Mac</span></h1>
+    <p class="lede">Browse topics, decode Avro and JSON payloads, produce messages and watch live consumer lag—in a fast native app instead of another heavy web console.</p>
+    <div class="cta">
+      <a class="btn" href="#download" data-appstore>
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.3 1.88-3.4 1.97-3.46-1.07-1.57-2.74-1.78-3.33-1.8-1.42-.14-2.77.83-3.49.83-.72 0-1.83-.81-3.01-.79-1.55.02-2.98.9-3.78 2.29-1.61 2.8-.41 6.94 1.16 9.21.77 1.11 1.68 2.36 2.88 2.31 1.16-.05 1.59-.75 2.99-.75 1.4 0 1.79.75 3.01.72 1.24-.02 2.03-1.13 2.79-2.25.88-1.29 1.24-2.53 1.26-2.6-.03-.01-2.42-.93-2.45-3.71zM14.08 5.84c.64-.77 1.07-1.85.95-2.92-.92.04-2.03.61-2.69 1.38-.59.68-1.1 1.78-.97 2.83 1.03.08 2.07-.52 2.71-1.29z"/></svg>
+        Download on the Mac App Store
+      </a>
+      <a class="btn ghost soon" href="#download" data-direct>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+        <span data-direct-label>Direct download</span> <span class="tag" data-direct-tag>Soon</span>
+      </a>
+    </div>
+    <p class="cta-meta"><span>macOS 27+</span><span>Apple Silicon</span><span>librdkafka built in</span><span>No telemetry</span></p>
+
+    <div class="shot" id="shot">
+      <div class="slot" data-shot="screenshots/hero.png" data-alt="KafkaGlass Explorer window with the topic sidebar, a topic's message table and the message inspector showing a decoded Avro record">
+        <div class="win" role="img" aria-label="KafkaGlass Explorer window with the topic sidebar, a topic's message table and the message inspector showing a decoded Avro record">
+          <div class="titlebar"><i></i><i></i><i></i><span>KafkaGlass Explorer — orders.v1</span></div>
+          <div class="kg-body">
+            <div class="kg-side">
+              <div class="kg-cluster"><span class="dot"></span><div><b>prod-eu</b><small>b-1.kafka.internal:9094</small></div><span class="env">PROD</span></div>
+              <div class="kg-grp">Cluster</div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Topics<em>48</em></div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c3 0 6 1.8 6 5.5"/></svg>Consumer Groups<em>17</em></div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4c-2 0-3 1-3 3v2c0 1.5-1 3-2 3 1 0 2 1.5 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1.5 1 3 2 3-1 0-2 1.5-2 3v2c0 2-1 3-3 3"/></svg>Schema Registry<em>62</em></div>
+              <div class="kg-grp">Topics</div>
+              <div class="kg-item sel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>orders.v1<em>12p</em></div>
+              <div class="kg-item sub">Partition 0<em>1.28M</em></div>
+              <div class="kg-item sub">Partition 1<em>1.31M</em></div>
+              <div class="kg-item sub">Partition 2<em>1.27M</em></div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>payments.events<em>6p</em></div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>inventory.updates<em>8p</em></div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>user-profile.cdc<em>3p</em></div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>shipment.tracking<em>6p</em></div>
+              <div class="kg-grp">Statistics</div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18a8 8 0 1 1 16 0M12 18l4-6"/></svg>Overview</div>
+              <div class="kg-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/></svg>Brokers</div>
+            </div>
+
+            <div class="kg-main">
+              <div class="kg-head">
+                <h4>orders.v1</h4>
+                <span class="meta">12 partitions · RF 3 · delete</span>
+                <div class="seg"><span>Properties</span><span class="on">Data</span><span>Partitions</span><span>Config</span><span>Logs</span></div>
+              </div>
+              <div class="kg-bar">
+                <span class="chip accent">Newest</span>
+                <span class="chip">All partitions</span>
+                <span class="chip">Limit 100</span>
+                <span class="chip search">⌕ Filter by key</span>
+                <span class="chip green">Fetch ⌘↩</span>
+                <span class="chip">Produce ⇧⌘P</span>
+              </div>
+              <div class="kg-table">
+                <div class="kg-tr th"><span>Offset</span><span>P</span><span>Key</span><span>Timestamp</span><span>Size</span></div>
+                <div class="kg-tr"><span>1284211</span><span class="muted">4</span><span class="k">ord_a71e09</span><span class="muted">09:41:12.418</span><span>612 B</span></div>
+                <div class="kg-tr sel"><span>1284210</span><span>7</span><span class="k">ord_9f2c41</span><span>09:41:07.051</span><span>588 B</span></div>
+                <div class="kg-tr"><span>1284209</span><span class="muted">2</span><span class="k">ord_31bd77</span><span class="muted">09:41:06.902</span><span>604 B</span></div>
+                <div class="kg-tr"><span>1284208</span><span class="muted">11</span><span class="k">ord_0c8e15</span><span class="muted">09:41:05.377</span><span>571 B</span></div>
+                <div class="kg-tr"><span>1284207</span><span class="muted">4</span><span class="k">ord_d24f90</span><span class="muted">09:41:04.640</span><span>633 B</span></div>
+                <div class="kg-tr"><span>1284206</span><span class="muted">0</span><span class="k">ord_77a3c2</span><span class="muted">09:41:03.118</span><span>598 B</span></div>
+                <div class="kg-tr"><span>1284205</span><span class="muted">9</span><span class="k">ord_e510bb</span><span class="muted">09:41:02.954</span><span>589 B</span></div>
+                <div class="kg-tr"><span>1284204</span><span class="muted">3</span><span class="k">ord_4b9f6d</span><span class="muted">09:41:01.206</span><span>615 B</span></div>
+                <div class="kg-tr"><span>1284203</span><span class="muted">7</span><span class="k">ord_8d02aa</span><span class="muted">09:40:59.733</span><span>577 B</span></div>
+                <div class="kg-tr"><span>1284202</span><span class="muted">5</span><span class="k">ord_1fe3c8</span><span class="muted">09:40:58.480</span><span>640 B</span></div>
+                <div class="kg-tr"><span>1284201</span><span class="muted">1</span><span class="k">ord_b6c714</span><span class="muted">09:40:57.019</span><span>602 B</span></div>
+                <div class="kg-tr"><span>1284200</span><span class="muted">10</span><span class="k">ord_59ad03</span><span class="muted">09:40:55.661</span><span>596 B</span></div>
+                <div class="kg-tr"><span>1284199</span><span class="muted">6</span><span class="k">ord_c3e8f1</span><span class="muted">09:40:54.302</span><span>621 B</span></div>
+                <div class="kg-tr"><span>1284198</span><span class="muted">8</span><span class="k">ord_02f6de</span><span class="muted">09:40:52.875</span><span>583 B</span></div>
+              </div>
+            </div>
+
+            <div class="kg-insp">
+              <div>
+                <div class="kg-lbl">Record Key</div>
+                <div class="kg-key">ord_9f2c41<span>⌘C</span></div>
+              </div>
+              <div class="kg-kv">
+                <div><span>Partition</span><b>7</b></div>
+                <div><span>Offset</span><b>1284210</b></div>
+                <div><span>Schema ID</span><b>1042</b></div>
+                <div><span>Headers</span><b>3</b></div>
+              </div>
+              <div class="seg"><span class="on">Avro</span><span>JSON</span><span>XML</span><span>Hex</span></div>
+              <div class="code"><span class="p">{</span>
+  <span class="k">"orderId"</span>: <span class="s">"ord_9f2c41"</span>,
+  <span class="k">"customerId"</span>: <span class="n">482913</span>,
+  <span class="k">"status"</span>: <span class="s">"PAID"</span>,
+  <span class="k">"total"</span>: <span class="p">{</span>
+    <span class="k">"amount"</span>: <span class="n">129.90</span>,
+    <span class="k">"currency"</span>: <span class="s">"EUR"</span>
+  <span class="p">}</span>,
+  <span class="k">"items"</span>: <span class="n">3</span>,
+  <span class="k">"channel"</span>: <span class="s">"ios"</span>,
+  <span class="k">"coupon"</span>: <span class="n">null</span>,
+  <span class="k">"createdAt"</span>: <span class="s">"2026-11-13T09:41:07Z"</span>
+<span class="p">}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <div class="center reveal">
+      <div class="eyebrow">Features</div>
+      <h2>Everything you reach for when Kafka misbehaves</h2>
+      <p class="sub">A native SwiftUI client built on librdkafka. It opens instantly, stays light on memory and talks to your brokers directly—no JVM, no Docker container, no browser tab.</p>
+    </div>
+    <div class="grid">
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg></div>
+        <h3>All your clusters</h3>
+        <p>Save profiles for local, DEV, QA and PROD clusters and switch between them from the sidebar in a click.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/></svg></div>
+        <h3>Fetch exactly what you need</h3>
+        <p>Tail the newest records, read from the earliest, jump to an offset or to a point in time—per topic or per partition—then filter by key instantly.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4c-2 0-3 1-3 3v2c0 1.5-1 3-2 3 1 0 2 1.5 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1.5 1 3 2 3-1 0-2 1.5-2 3v2c0 2-1 3-3 3"/></svg></div>
+        <h3>Avro, JSON, XML &amp; hex</h3>
+        <p>Auto-detect decodes Confluent Avro with schemas from your Schema Registry, pretty-prints JSON and XML, and falls back to text or a canonical hex dump.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></div>
+        <h3>Produce &amp; resend</h3>
+        <p>Publish a record with key, value and headers as text, JSON, hex, Base64 or a null tombstone—or right-click any fetched message to resend it.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
+        <h3>Live statistics</h3>
+        <p>Throughput per topic and partition, consumer group lag and broker round-trip times, streamed from librdkafka and charted over the last minute.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Enterprise security</h3>
+        <p>Mutual TLS, SASL PLAIN, SCRAM-SHA-256/512 and Kerberos, with every secret kept in the macOS Keychain—never in a config file.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tour">
+  <div class="wrap">
+    <div class="row">
+      <div class="reveal">
+        <div class="eyebrow">Message Inspector</div>
+        <h2>See what’s really inside every record</h2>
+        <p class="sub">Select a message and KafkaGlass figures out the format for you. Confluent wire-format payloads are decoded with the exact schema version they were written with.</p>
+        <ul>
+          <li><span><b>Schema Registry aware.</b> Reads the magic byte and schema ID, fetches the schema once and caches it for the rest of the session.</span></li>
+          <li><span><b>Every view you need.</b> Switch between Avro, JSON, XML, plain text and a hex dump with byte offsets and ASCII columns.</span></li>
+          <li><span><b>Copy anything.</b> Selectable payloads, one-click key copy and full record headers right next to the value.</span></li>
+        </ul>
+      </div>
+      <div class="slot reveal" data-shot="screenshots/inspector.png" data-alt="Message inspector decoding a Confluent Avro record">
+        <div class="panel" aria-hidden="true">
+          <div class="titlebar"><i></i><i></i><i></i><span>Message Inspector · orders.v1 · offset 1284210</span></div>
+          <div class="pbody">
+            <div class="fmt"><span>Auto</span><span class="on">Avro</span><span>JSON</span><span>XML</span><span>Text</span><span>Hex</span><span class="auto">Detected: Avro</span></div>
+            <div class="wire"><b class="m">00</b><b class="id">00 00 04 12</b><b>14 6F 72 64 5F 39 66 32 …</b> <span>magic · schema 1042 · payload</span></div>
+            <div class="code"><span class="c">// com.shop.orders.OrderPlaced · v7</span>
+<span class="p">{</span>
+  <span class="k">"orderId"</span>: <span class="s">"ord_9f2c41"</span>,
+  <span class="k">"customerId"</span>: <span class="n">482913</span>,
+  <span class="k">"status"</span>: <span class="s">"PAID"</span>,
+  <span class="k">"total"</span>: <span class="p">{</span> <span class="k">"amount"</span>: <span class="n">129.90</span>, <span class="k">"currency"</span>: <span class="s">"EUR"</span> <span class="p">}</span>,
+  <span class="k">"items"</span>: <span class="n">3</span>,
+  <span class="k">"createdAt"</span>: <span class="s">"2026-11-13T09:41:07Z"</span>
+<span class="p">}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row rev">
+      <div class="reveal">
+        <div class="eyebrow">Produce</div>
+        <h2>Send a test message in seconds</h2>
+        <p class="sub">Press <kbd>⇧⌘P</kbd> to open the Produce sheet on the current topic. KafkaGlass waits for the brokers to acknowledge the write and tells you exactly where it landed.</p>
+        <ul>
+          <li><span><b>Key, value and headers.</b> Encode as text, validated JSON, hex, Base64, a fresh UUID key or a null tombstone for compacted topics.</span></li>
+          <li><span><b>Pick the partition.</b> Let Kafka hash the key or pin the record to a specific partition.</span></li>
+          <li><span><b>Resend in one click.</b> Right-click a fetched record to reopen it prefilled with its partition, key, value and headers.</span></li>
+        </ul>
+      </div>
+      <div class="slot reveal" data-shot="screenshots/produce.png" data-alt="Produce Message sheet with key, value, headers and delivery confirmation">
+        <div class="panel" aria-hidden="true">
+          <div class="titlebar"><i></i><i></i><i></i><span>Produce Message · payments.events</span></div>
+          <div class="pbody">
+            <div class="form">
+              <div class="fld"><span>Partition</span><div class="inp">Automatic (key hash)</div></div>
+              <div class="fld"><span>Key</span><div class="inp"><span class="v">3f6c1a2e-8b47-4d1e-9a0c-71e5b2d9c804</span><div class="seg"><span>Text</span><span class="on">UUID</span></div></div></div>
+              <div class="fld"><span>Value</span><div class="inp"><span class="v">{ "paymentId": "pay_71ac", "amount": 49.0, "status": "CAPTURED" }</span><div class="seg"><span class="on">JSON</span><span>Null</span></div></div></div>
+              <div class="fld"><span>Headers</span>
+                <div class="hdrs">
+                  <div class="inp"><b>trace-id</b>0af7651916cd43dd</div>
+                  <div class="inp"><b>source</b>kafkaglass-test</div>
+                </div>
+              </div>
+            </div>
+            <div class="result"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>Delivered with <code>acks=all</code> to partition <code>3</code> at offset <code>88412</code></span></div>
+            <div class="actions"><span class="chip">Cancel</span><span class="chip accent">Produce</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="reveal">
+        <div class="eyebrow">Statistics</div>
+        <h2>Watch the cluster breathe in real time</h2>
+        <p class="sub">The Statistics workspace streams librdkafka metrics into live charts, so you can spot a stuck consumer or a slow broker before anyone files a ticket.</p>
+        <ul>
+          <li><span><b>Throughput.</b> Messages and bytes per second for the whole cluster, each topic and each partition.</span></li>
+          <li><span><b>Consumer group lag.</b> Committed offsets versus the log end, group state and members at a glance.</span></li>
+          <li><span><b>Broker health.</b> Average, p95 and p99 round-trip times, throttling and reconnects per broker—plus Pause when you’re done.</span></li>
+        </ul>
+      </div>
+      <div class="slot reveal" data-shot="screenshots/statistics.png" data-alt="Statistics workspace with throughput chart and consumer group lag">
+        <div class="panel" aria-hidden="true">
+          <div class="titlebar"><i></i><i></i><i></i><span>Statistics · Overview · prod-eu</span></div>
+          <div class="pbody">
+            <div class="stats">
+              <div class="stat"><span>Ingest rate</span><b>4,812 <small>msg/s</small></b></div>
+              <div class="stat"><span>Throughput</span><b>2.9 <small>MB/s</small></b></div>
+              <div class="stat"><span>Broker RTT</span><b>3.4 <small>ms</small></b></div>
+            </div>
+            <div class="chart">
+              <div class="chart-hd"><span>Messages / second</span><i>last 60 s</i></div>
+              <svg viewBox="0 0 300 92" preserveAspectRatio="none">
+                <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b6dff" stop-opacity=".45"/><stop offset="1" stop-color="#3b6dff" stop-opacity="0"/></linearGradient></defs>
+                <path d="M0 23H300M0 46H300M0 69H300" stroke="#1f2636" stroke-width="1"/>
+                <path d="M0 58 L15 52 L30 55 L45 44 L60 48 L75 38 L90 42 L105 35 L120 40 L135 30 L150 34 L165 26 L180 31 L195 24 L210 36 L225 28 L240 22 L255 27 L270 18 L285 24 L300 20 L300 92 L0 92 Z" fill="url(#ga)"/>
+                <path d="M0 58 L15 52 L30 55 L45 44 L60 48 L75 38 L90 42 L105 35 L120 40 L135 30 L150 34 L165 26 L180 31 L195 24 L210 36 L225 28 L240 22 L255 27 L270 18 L285 24 L300 20" fill="none" stroke="#6f95ff" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+                <path d="M0 76 L20 74 L40 75 L60 70 L80 72 L100 68 L120 70 L140 66 L160 69 L180 64 L200 67 L220 62 L240 65 L260 60 L280 63 L300 61" fill="none" stroke="#2fd4f0" stroke-width="1.6" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </div>
+            <div class="lag">
+              <div><span>order-service</span><em class="ok">Stable</em><b>12</b></div>
+              <div><span>payment-processor</span><em class="ok">Stable</em><b>0</b></div>
+              <div><span>analytics-sink</span><em class="warn">Rebalancing</em><b>48,203</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row rev">
+      <div class="reveal">
+        <div class="eyebrow">Schema Registry</div>
+        <h2>Browse subjects and diff schema versions</h2>
+        <p class="sub">Connect a Confluent-compatible Schema Registry and get a searchable list of subjects, their latest versions and IDs, and the full schema text.</p>
+        <ul>
+          <li><span><b>Search by name or ID.</b> Paste the schema ID from the message inspector to jump straight to its subject.</span></li>
+          <li><span><b>Version diff.</b> Compare any two versions line by line to see which field was added, removed or retyped.</span></li>
+          <li><span><b>Topic tools included.</b> Create topics, inspect partitions, leaders, replicas and ISR, and review every topic config.</span></li>
+        </ul>
+      </div>
+      <div class="slot reveal" data-shot="screenshots/schema-registry.png" data-alt="Schema Registry subjects and a diff between two schema versions">
+        <div class="panel" aria-hidden="true">
+          <div class="titlebar"><i></i><i></i><i></i><span>Schema Registry · orders.v1-value · v6 → v7</span></div>
+          <div class="pbody">
+            <div class="subjects">
+              <div class="sel"><b>orders.v1-value</b><span>v7 · id 1042</span></div>
+              <div><b>payments.events-value</b><span>v3 · id 987</span></div>
+              <div><b>user-profile.cdc-key</b><span>v1 · id 311</span></div>
+            </div>
+            <div class="diff">
+              <div class="ctx"><span>14</span><span>14</span><code>{ "name": "status", "type": "string" },</code></div>
+              <div class="del"><span>15</span><span></span><code>{ "name": "total", "type": "double" },</code></div>
+              <div class="add"><span></span><span>15</span><code>{ "name": "total", "type": "Money" },</code></div>
+              <div class="ctx"><span>16</span><span>16</span><code>{ "name": "items", "type": "int" },</code></div>
+              <div class="add"><span></span><span>17</span><code>{ "name": "channel", "type": "string", "default": "web" },</code></div>
+              <div class="add"><span></span><span>18</span><code>{ "name": "coupon", "type": ["null", "string"], "default": null },</code></div>
+              <div class="ctx"><span>17</span><span>19</span><code>{ "name": "createdAt", "type": "string" }</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="security">
+  <div class="wrap">
+    <div class="center reveal">
+      <div class="eyebrow">Security &amp; Privacy</div>
+      <h2>Safe to point at production</h2>
+      <p class="sub">KafkaGlass talks only to the brokers and Schema Registry you configure. No accounts, no analytics, no cloud relay in between.</p>
+    </div>
+    <div class="trust reveal">
+      <div><b>Read without side effects</b><p>Messages are fetched with manual partition assignment—no consumer group is joined and no offsets are committed.</p></div>
+      <div><b>Secrets in the Keychain</b><p>SASL passwords, key passphrases and registry credentials live in the macOS Keychain, never in plain text.</p></div>
+      <div><b>App Sandbox</b><p>The app reads only the certificate files you pick yourself, through security-scoped bookmarks.</p></div>
+      <div><b>Zero telemetry</b><p>No analytics, crash reporters or tracking. Your topics and payloads never leave your Mac and your cluster.</p></div>
+    </div>
+    <div class="auth reveal">
+      <span>PLAINTEXT</span><span>SSL · mTLS</span><span>SASL_PLAINTEXT</span><span>SASL_SSL</span><span>PLAIN</span><span>SCRAM-SHA-256</span><span>SCRAM-SHA-512</span><span>GSSAPI / Kerberos</span>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap narrow">
+    <div class="center reveal">
+      <div class="eyebrow">FAQ</div>
+      <h2>Questions, answered</h2>
+    </div>
+    <div class="faq reveal">
+      <details open>
+        <summary><h3>Does browsing a topic commit consumer offsets?</h3></summary>
+        <p>No. KafkaGlass Explorer reads messages with manual partition assignment and no consumer group subscription, so fetching never commits offsets or joins your application’s consumer groups.</p>
+      </details>
+      <details>
+        <summary><h3>Do I need to install librdkafka or Homebrew?</h3></summary>
+        <p>No. librdkafka, OpenSSL, lz4 and zstd are bundled inside the app. Download it, connect to a cluster and start browsing.</p>
+      </details>
+      <details>
+        <summary><h3>Which security protocols are supported?</h3></summary>
+        <p><code>PLAINTEXT</code>, <code>SSL</code> with mutual TLS client certificates and CA verification, and <code>SASL_PLAINTEXT</code> / <code>SASL_SSL</code> with <code>PLAIN</code>, <code>SCRAM-SHA-256</code>, <code>SCRAM-SHA-512</code> and <code>GSSAPI</code> (Kerberos).</p>
+      </details>
+      <details>
+        <summary><h3>Where are my passwords stored?</h3></summary>
+        <p>SASL passwords, private key passphrases and Schema Registry secrets are stored in the macOS Keychain. Cluster profiles themselves are kept locally on your Mac.</p>
+      </details>
+      <details>
+        <summary><h3>Can it decode Avro messages?</h3></summary>
+        <p>Yes. Messages in the Confluent wire format (magic byte <code>0x00</code> + schema ID) are decoded with schemas fetched from your Schema Registry. JSON, XML, plain text and hex views are always available.</p>
+      </details>
+      <details>
+        <summary><h3>Can I delete or purge topics?</h3></summary>
+        <p>Yes, with a confirmation step. Internal topics such as <code>__consumer_offsets</code> and <code>_schemas</code> are always protected from deletion and purging.</p>
+      </details>
+      <details>
+        <summary><h3>What are the system requirements?</h3></summary>
+        <p>macOS 27.0 or later on a Mac with Apple Silicon.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="center reveal">
+      <div class="eyebrow">Download</div>
+      <h2>Get KafkaGlass Explorer</h2>
+      <p class="sub">Install from the Mac App Store today. A direct download from this site is on the way.</p>
+    </div>
+    <div class="dl">
+      <div class="dlmain reveal">
+        <span class="badge">Mac App Store</span>
+        <h3>KafkaGlass Explorer 1.1</h3>
+        <p class="meta">Automatic updates, signed and sandboxed by Apple.</p>
+        <div class="cta">
+          <a class="btn" href="#download" data-appstore>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.3 1.88-3.4 1.97-3.46-1.07-1.57-2.74-1.78-3.33-1.8-1.42-.14-2.77.83-3.49.83-.72 0-1.83-.81-3.01-.79-1.55.02-2.98.9-3.78 2.29-1.61 2.8-.41 6.94 1.16 9.21.77 1.11 1.68 2.36 2.88 2.31 1.16-.05 1.59-.75 2.99-.75 1.4 0 1.79.75 3.01.72 1.24-.02 2.03-1.13 2.79-2.25.88-1.29 1.24-2.53 1.26-2.6-.03-.01-2.42-.93-2.45-3.71zM14.08 5.84c.64-.77 1.07-1.85.95-2.92-.92.04-2.03.61-2.69 1.38-.59.68-1.1 1.78-.97 2.83 1.03.08 2.07-.52 2.71-1.29z"/></svg>
+            Download on the Mac App Store
+          </a>
+        </div>
+        <dl>
+          <dt>Requires</dt><dd>macOS 27.0 or later · Apple Silicon</dd>
+          <dt>Category</dt><dd>Developer Tools</dd>
+          <dt>Includes</dt><dd>librdkafka, OpenSSL, lz4, zstd</dd>
+          <dt>Privacy</dt><dd>No data collected · No tracking</dd>
+        </dl>
+      </div>
+      <div class="dlmain alt reveal">
+        <span class="badge">Direct download</span>
+        <h3>Download from this site</h3>
+        <p class="meta">A standalone build distributed outside the App Store, for Macs where the App Store isn’t an option.</p>
+        <div class="cta">
+          <a class="btn ghost soon" href="#download" data-direct>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+            <span data-direct-label>KafkaGlassExplorer-macOS.zip</span> <span class="tag" data-direct-tag>Coming soon</span>
+          </a>
+        </div>
+        <dl>
+          <dt>Format</dt><dd>Zipped <code>.app</code> for <code>/Applications</code></dd>
+          <dt>Requires</dt><dd>macOS 27.0 or later · Apple Silicon</dd>
+          <dt>Updates</dt><dd>Release notes on the <a href="https://github.com/kafka-glass/desktop-app/releases">releases page</a></dd>
+        </dl>
+      </div>
+    </div>
+    <div class="keys reveal">
+      <h3>Keyboard first</h3>
+      <ul>
+        <li>New cluster connection<kbd>⌘N</kbd></li>
+        <li>New topic<kbd>⇧⌘N</kbd></li>
+        <li>Produce message<kbd>⇧⌘P</kbd></li>
+        <li>Fetch messages<kbd>⌘↩</kbd></li>
+        <li>Topics · Groups · Schemas · Statistics<kbd>⌘1–4</kbd></li>
+        <li>Refresh<kbd>⌘R</kbd></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="./"><img src="icon.png" alt="" width="24" height="24" loading="lazy">KafkaGlass Explorer</a>
+    <nav aria-label="Footer" class="flinks">
+      <a href="#features">Features</a>
+      <a href="#tour">Tour</a>
+      <a href="#faq">FAQ</a>
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+    <p>© 2026 Dmytro Kuchura · Apache Kafka is a trademark of the Apache Software Foundation.</p>
+  </div>
+</footer>
+
+<script>
+/* Fill these in when the links exist; until then the buttons point to #download and show "Soon". */
+var APP_STORE_URL = "";
+var DIRECT_DOWNLOAD_URL = "";
+
+(function () {
+  if (APP_STORE_URL) {
+    document.querySelectorAll("[data-appstore]").forEach(function (a) { a.href = APP_STORE_URL; });
+  }
+  if (DIRECT_DOWNLOAD_URL) {
+    document.querySelectorAll("[data-direct]").forEach(function (a) {
+      a.href = DIRECT_DOWNLOAD_URL;
+      a.classList.remove("soon");
+      var tag = a.querySelector("[data-direct-tag]");
+      if (tag) tag.remove();
+    });
+  }
+
+  // Each [data-shot] slot shows its CSS mock until the screenshot file exists, then swaps it in
+  document.querySelectorAll("[data-shot]").forEach(function (slot) {
+    var img = new Image();
+    img.onload = function () {
+      img.className = "real";
+      img.alt = slot.getAttribute("data-alt") || "";
+      img.decoding = "async";
+      slot.replaceChildren(img);
+    };
+    img.src = slot.getAttribute("data-shot");
+  });
+
+  var els = document.querySelectorAll(".reveal, #shot");
+  if (!("IntersectionObserver" in window)) {
+    els.forEach(function (e) { e.classList.add("in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(function (e) { io.observe(e); });
+})();
+</script>
+</body>
+</html>

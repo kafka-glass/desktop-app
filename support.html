@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" class="nojs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KafkaGlass Explorer Support — Help, Connections &amp; FAQ</title>
+<meta name="description" content="Get help with KafkaGlass Explorer for macOS: connecting to secured Kafka clusters, certificates, Schema Registry, Avro decoding and troubleshooting.">
+<meta name="author" content="Dmytro Kuchura">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="https://kafka-glass.github.io/desktop-app/support.html">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="sitemap.xml">
+<meta name="application-name" content="KafkaGlass Explorer">
+<meta name="theme-color" content="#0a0d14">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KafkaGlass Explorer">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://kafka-glass.github.io/desktop-app/support.html">
+<meta property="og:title" content="KafkaGlass Explorer Support">
+<meta property="og:description" content="Connection troubleshooting, certificates, Schema Registry and bug reports for KafkaGlass Explorer on macOS.">
+<meta property="og:image" content="https://kafka-glass.github.io/desktop-app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KafkaGlass Explorer Support">
+<meta name="twitter:description" content="Connection troubleshooting, certificates, Schema Registry and bug reports for KafkaGlass Explorer on macOS.">
+<meta name="twitter:image" content="https://kafka-glass.github.io/desktop-app/og.png">
+
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="stylesheet" href="style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://kafka-glass.github.io/desktop-app/support.html#webpage",
+      "url": "https://kafka-glass.github.io/desktop-app/support.html",
+      "name": "KafkaGlass Explorer Support",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "KafkaGlass Explorer", "item": "https://kafka-glass.github.io/desktop-app/" },
+        { "@type": "ListItem", "position": 2, "name": "Support", "item": "https://kafka-glass.github.io/desktop-app/support.html" }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="KafkaGlass Explorer home"><img src="icon.png" alt="" width="32" height="32">KafkaGlass <span>Explorer</span></a>
+    <div class="links">
+      <a href="./#features">Features</a>
+      <a href="./#tour">Tour</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="support.html" aria-current="page">Support</a>
+    </div>
+    <a class="btn small" href="https://github.com/kafka-glass/desktop-app/issues/new">Open Issue</a>
+  </div>
+</nav>
+
+<main>
+<header class="page-head">
+  <div class="wrap narrow">
+    <div class="eyebrow">Support</div>
+    <h1>How can we help?</h1>
+    <p class="lede">Questions, bug reports and feature requests are welcome.</p>
+  </div>
+</header>
+
+<section class="doc">
+  <div class="wrap narrow">
+    <div class="doc-card">
+      <h2>Contact</h2>
+      <p>Open an issue on GitHub: <a href="https://github.com/kafka-glass/desktop-app/issues/new">github.com/kafka-glass/desktop-app/issues</a>. Please include your macOS version, the app version (<code>KafkaGlass Explorer › About</code>), your Kafka distribution and version, the security protocol you use and the exact error message.</p>
+      <p>Never paste passwords, private keys or production message payloads into an issue—issues are public.</p>
+    </div>
+
+    <h2 style="margin-top:48px;font-size:26px">Common questions</h2>
+    <div class="faq" style="margin-top:24px">
+      <details open>
+        <summary><h3>The app can’t connect to my cluster.</h3></summary>
+        <p>Check that the bootstrap servers are reachable from your Mac (VPN, firewall, advertised listeners) and that the security protocol matches the listener you’re connecting to. The topic’s <code>Logs</code> tab shows the broker activity log with connection errors from librdkafka.</p>
+      </details>
+      <details>
+        <summary><h3>My certificate file is “not readable”.</h3></summary>
+        <p>KafkaGlass runs in the macOS App Sandbox, so it can only read files you select with the file picker. Open <code>Cluster › Edit Cluster Settings…</code> and choose the CA, client certificate and key files again with the <b>Browse…</b> button rather than typing their paths.</p>
+      </details>
+      <details>
+        <summary><h3>SSL fails with a certificate verification error.</h3></summary>
+        <p>If your brokers use a private CA, select its certificate as the CA file in the cluster settings. Without one, KafkaGlass verifies the brokers against the system root certificates.</p>
+      </details>
+      <details>
+        <summary><h3>Avro messages show up as hex.</h3></summary>
+        <p>Enable Schema Registry in the cluster settings and check its URL and credentials. Avro decoding applies to messages in the Confluent wire format (magic byte <code>0x00</code> followed by a 4-byte schema ID).</p>
+      </details>
+      <details>
+        <summary><h3>Does fetching messages affect my consumers?</h3></summary>
+        <p>No. KafkaGlass reads with manual partition assignment and never joins a consumer group or commits offsets.</p>
+      </details>
+      <details>
+        <summary><h3>How do I get a refund?</h3></summary>
+        <p>App Store purchases are handled by Apple. Request a refund at <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="./"><img src="icon.png" alt="" width="24" height="24" loading="lazy">KafkaGlass Explorer</a>
+    <nav aria-label="Footer" class="flinks">
+      <a href="./#features">Features</a>
+      <a href="./#tour">Tour</a>
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+    <p>© 2026 Dmytro Kuchura</p>
+  </div>
+</footer>
+
+</body>
+</html>

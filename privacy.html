@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en" class="nojs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KafkaGlass Explorer Privacy Policy</title>
+<meta name="description" content="KafkaGlass Explorer does not collect, store or share any personal data. It connects only to the Kafka clusters and Schema Registry you configure.">
+<meta name="author" content="Dmytro Kuchura">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://kafka-glass.github.io/desktop-app/privacy.html">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="sitemap.xml">
+<meta name="application-name" content="KafkaGlass Explorer">
+<meta name="theme-color" content="#0a0d14">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KafkaGlass Explorer">
+<meta property="og:url" content="https://kafka-glass.github.io/desktop-app/privacy.html">
+<meta property="og:title" content="KafkaGlass Explorer Privacy Policy">
+<meta property="og:description" content="No accounts, no analytics, no tracking. Your data stays between your Mac and your Kafka cluster.">
+<meta property="og:image" content="https://kafka-glass.github.io/desktop-app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="KafkaGlass Explorer home"><img src="icon.png" alt="" width="32" height="32">KafkaGlass <span>Explorer</span></a>
+    <div class="links">
+      <a href="./#features">Features</a>
+      <a href="./#tour">Tour</a>
+      <a href="privacy.html" aria-current="page">Privacy</a>
+      <a href="support.html">Support</a>
+    </div>
+    <a class="btn small" href="./">Back to Home</a>
+  </div>
+</nav>
+
+<main>
+<header class="page-head">
+  <div class="wrap narrow">
+    <div class="eyebrow">Privacy Policy</div>
+    <h1>Your data stays yours</h1>
+    <p class="lede">KafkaGlass Explorer does not collect, store or share any personal data. Last updated: November 13, 2026.</p>
+  </div>
+</header>
+
+<section class="doc">
+  <div class="wrap narrow">
+    <div class="doc-card">
+      <h2>Data we collect</h2>
+      <p>None. KafkaGlass Explorer has no user accounts, analytics, advertising, crash reporting or tracking of any kind. The developer receives no information about you or how you use the app.</p>
+    </div>
+
+    <div class="doc-card">
+      <h2>Network connections</h2>
+      <p>The app connects only to the servers you configure yourself:</p>
+      <ul>
+        <li>the Apache Kafka brokers of your cluster profiles, to read metadata, fetch and produce messages and collect statistics;</li>
+        <li>the Schema Registry you enable for a profile, to fetch schemas for decoding messages.</li>
+      </ul>
+      <p>Messages, schemas and metrics travel directly between your Mac and those servers. Nothing is sent to the developer or any third party.</p>
+    </div>
+
+    <div class="doc-card">
+      <h2>Stored on your Mac</h2>
+      <p>Cluster profiles (names, bootstrap servers, security settings and references to the certificate files you pick) are stored locally inside the app’s sandboxed container. Passwords, private key passphrases and Schema Registry secrets are stored in the macOS Keychain. Fetched messages are kept in memory only while the app is running.</p>
+    </div>
+
+    <div class="doc-card">
+      <h2>Purchases</h2>
+      <p>When you get KafkaGlass Explorer from the Mac App Store, Apple processes the transaction under <a href="https://www.apple.com/legal/privacy/">Apple’s Privacy Policy</a>; the developer does not receive your payment details.</p>
+    </div>
+
+    <div class="doc-card">
+      <h2>Support requests</h2>
+      <p>If you contact support through GitHub Issues, the information you post is public and handled under <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub’s Privacy Statement</a>. Don’t include credentials, personal information or message payloads you don’t want to share publicly.</p>
+    </div>
+
+    <div class="doc-card">
+      <h2>Children</h2>
+      <p>KafkaGlass Explorer does not knowingly collect information from anyone, including children under 13.</p>
+    </div>
+
+    <div class="doc-card">
+      <h2>Changes &amp; Contact</h2>
+      <p>If this policy changes, the updated version will be posted on this page with a new date.</p>
+      <p>Questions about this policy: <a href="https://github.com/kafka-glass/desktop-app/issues/new">open an issue on GitHub</a>. Developer: Dmytro Kuchura.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="./"><img src="icon.png" alt="" width="24" height="24" loading="lazy">KafkaGlass Explorer</a>
+    <nav aria-label="Footer" class="flinks">
+      <a href="./#features">Features</a>
+      <a href="./#tour">Tour</a>
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+    <p>© 2026 Dmytro Kuchura</p>
+  </div>
+</footer>
+
+</body>
+</html>
